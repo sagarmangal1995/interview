@@ -1,36 +1,79 @@
+import { useState } from "react";
 import {
-    BsHouseDoor,
-    BsPeople,
-    BsFileText,
-    BsSearch,
-    BsWallet
+  BsHouseDoor,
+  BsPeople,
+  BsFileText,
+  BsSearch,
+  BsWallet,
+  BsChevronLeft,
+  BsChevronRight,
+  BsBook,
+  BsLink45Deg,
+  BsCashStack,
 } from "react-icons/bs";
 
 const Sidebar = () => {
-    return (
-        <aside className="sidebar" aria-label="Main Navigation">
-            <h5 className="logo">coursefinder.ai</h5>
+  const [collapsed, setCollapsed] = useState(false);
 
-            <ul className="nav flex-column">
-                <li className="nav-item active">
-                    <BsHouseDoor /> Dashboard
-                </li>
-                <li className="nav-item">
-                    <BsPeople /> Students
-                </li>
-                <li className="nav-item">
-                    <BsFileText /> Applications
-                </li>
-                <li className="nav-item">
-                    <BsSearch /> Search Courses
-                </li>
-                <li className="nav-item">
-                    <BsWallet /> Wallet
-                </li>
-            </ul>
+  return (
+    <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+      {/* Header */}
+      <div className="sidebar-header">
+        {!collapsed && <span className="logo">coursefinder.ai</span>}
 
-        </aside>
-    );
+        <button
+          className="collapse-btn"
+          onClick={() => setCollapsed(!collapsed)}
+          aria-label="Toggle Sidebar"
+        >
+          {collapsed ? <BsChevronRight /> : <BsChevronLeft />}
+        </button>
+      </div>
+
+      {/* Menu */}
+      <ul className="sidebar-menu">
+        <li className="active">
+          <BsHouseDoor />
+          {!collapsed && <span>Dashboard</span>}
+        </li>
+
+        <li>
+          <BsPeople />
+          {!collapsed && <span>Students</span>}
+        </li>
+
+        <li>
+          <BsFileText />
+          {!collapsed && <span>Applications</span>}
+        </li>
+
+        <li>
+          <BsSearch />
+          {!collapsed && <span>Search Courses</span>}
+        </li>
+
+        <li>
+          <BsWallet />
+          {!collapsed && <span>Wallet</span>}
+        </li>
+
+        <li>
+          <BsCashStack />
+          {!collapsed && <span>Commission Payments</span>}
+        </li>
+
+        <li>
+          <BsBook />
+          {!collapsed && <span>Learning Resources</span>}
+        </li>
+
+        <li>
+          <BsLink45Deg />
+          {!collapsed && <span>Quick Links</span>}
+        </li>
+      </ul>
+    </aside>
+  );
 };
 
 export default Sidebar;

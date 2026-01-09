@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 const TABS = [
-  { label: "Pending On Me (15)", key: "pending" },
-  { label: "Lorem Ipsum (12)", key: "lorem1" },
-  { label: "Lorem Ipsum (18)", key: "lorem2" },
+  { key: "pending", label: "Pending On Me (15)" },
+  { key: "lorem1", label: "Lorem Ipsum (12)" },
+  { key: "lorem2", label: "Lorem Ipsum (18)" },
 ];
 
 const DATA = [
@@ -18,7 +18,7 @@ const DATA = [
     date: "12 Dec 2022",
   },
   {
-    ack: "11710/22-23",
+    ack: "11711/22-23",
     name: "Viren Shah",
     email: "virensha24@gmail.com",
     university: "Sheffield Hallam...",
@@ -27,7 +27,7 @@ const DATA = [
     date: "12 Dec 2022",
   },
   {
-    ack: "11710/22-23",
+    ack: "11712/22-23",
     name: "Tushar Joshi",
     email: "tushar@gmail.com",
     university: "Sheffield Hallam...",
@@ -35,10 +35,49 @@ const DATA = [
     pending: "1 Day",
     date: "12 Dec 2022",
   },
+  {
+    ack: "11713/22-23",
+    name: "Rishi Joshi",
+    email: "rishijoshi@gmail.com",
+    university: "Sheffield Hallam...",
+    program: "MSc International...",
+    pending: "1 Day",
+    date: "12 Dec 2022",
+  },
+  {
+    ack: "11714/22-23",
+    name: "Rishi Joshi",
+    email: "rishijoshi@gmail.com",
+    university: "Sheffield Hallam...",
+    program: "MSc International...",
+    pending: "1 Day",
+    date: "12 Dec 2022",
+  },
 ];
 
-const ApplicationsTable = () => {
+const ROWS_PER_PAGE = 3;
+
+const ApplicationsTable = ({ searchTerm = "",data  }) => {
   const [activeTab, setActiveTab] = useState("pending");
+  const [page, setPage] = useState(1);
+
+  /* SEARCH FILTER */
+  const filteredData = useMemo(() => {
+    const term = searchTerm.toLowerCase();
+    return DATA.filter(
+      (item) =>
+        item.name.toLowerCase().includes(term) ||
+        item.ack.toLowerCase().includes(term)
+    );
+  }, [searchTerm]);
+
+  /* PAGINATION */
+  const totalPages = Math.ceil(filteredData.length / ROWS_PER_PAGE);
+
+  const paginatedData = useMemo(() => {
+    const start = (page - 1) * ROWS_PER_PAGE;
+    return filteredData.slice(start, start + ROWS_PER_PAGE);
+  }, [filteredData, page]);
 
   return (
     <section className="applications-card">
@@ -53,10 +92,11 @@ const ApplicationsTable = () => {
         {TABS.map((tab) => (
           <button
             key={tab.key}
-            className={`tab-btn ${
-              activeTab === tab.key ? "active" : ""
-            }`}
-            onClick={() => setActiveTab(tab.key)}
+            className={`tab-btn ${activeTab === tab.key ? "active" : ""}`}
+            onClick={() => {
+              setActiveTab(tab.key);
+              setPage(1);
+            }}
           >
             {tab.label}
           </button>
@@ -77,42 +117,66 @@ const ApplicationsTable = () => {
           </thead>
 
           <tbody>
-            {DATA.map((item, index) => (
-              <tr key={index}>
-                <td className="link">{item.ack}</td>
+            {paginatedData.length > 0 ? (
+              paginatedData.map((item, i) => (
+                <tr key={i}>
+                  <td className="link">{item.ack}</td>
 
-                <td>
-                  <div className="fw-medium">{item.name}</div>
-                  <div className="text-muted small">{item.email}</div>
-                </td>
+                  <td>
+                    <div className="fw-medium">{item.name}</div>
+                    <div className="text-muted small">{item.email}</div>
+                  </td>
 
-                <td>{item.university}</td>
-                <td>{item.program}</td>
+                  <td>{item.university}</td>
+                  <td>{item.program}</td>
 
-                <td>
-                  <div className="fw-medium">{item.pending}</div>
-                  <div className="text-muted small">{item.date}</div>
+                  <td>
+                    <div className="fw-medium">{item.pending}</div>
+                    <div className="text-muted small">{item.date}</div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center text-muted py-4">
+                  No records found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
-      <div className="pagination-wrapper">
-        <button className="page-btn">
-          <BsChevronLeft />
-        </button>
+      {totalPages > 1 && (
+        <div className="pagination-wrapper">
+          <button
+            className="page-btn"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
+            <BsChevronLeft />
+          </button>
 
-        <button className="page-btn active">1</button>
-        <button className="page-btn">2</button>
-        <button className="page-btn">3</button>
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i}
+              className={`page-btn ${page === i + 1 ? "active" : ""}`}
+              onClick={() => setPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
 
-        <button className="page-btn">
-          <BsChevronRight />
-        </button>
-      </div>
+          <button
+            className="page-btn"
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            <BsChevronRight />
+          </button>
+        </div>
+      )}
     </section>
   );
 };

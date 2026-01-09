@@ -1,52 +1,109 @@
+import { useState } from "react";
+import ApplicationsTable from "../components/ApplicationsTable";
 import Filters from "../components/Filters";
 import StatsRow from "../components/StatsRow";
-import ApplicationsTable from "../components/ApplicationsTable";
 import NewsWidget from "../components/NewsWidget";
 import EventsWidget from "../components/EventsWidget";
 import QuickLinks from "../components/QuickLinks";
-import AlliedServicesCard from "../components/AlliedServicesCard";
 import ContactRegionalManager from "../components/ContactRegionalManager";
 
-const Dashboard = () => {
+import AlliedServicesCard from "../components/AlliedServicesCard";
+const APPLICATIONS = [
+    {
+        ack: "11710/22-23",
+        name: "Rishi Joshi",
+        year: "2023",
+        date: "2023-12-12",
+        intake: "Fall",
+        country: "USA",
+    },
+    {
+        ack: "11711/22-23",
+        name: "Viren Shah",
+        year: "2024",
+        date: "2024-01-05",
+        intake: "Spring",
+        country: "UK",
+    },
+    {
+        ack: "11712/22-23",
+        name: "Tushar Joshi",
+        year: "2023",
+        date: "2023-11-20",
+        intake: "Fall",
+        country: "Canada",
+    },
+];
+
+const Dashboard = ({ searchTerm }) => {
+    const [data, setData] = useState(APPLICATIONS);
+    const applyFilters = (filters) => {
+        let filtered = APPLICATIONS;
+
+        if (filters.year)
+            filtered = filtered.filter((i) => i.year === filters.year);
+
+        if (filters.intake)
+            filtered = filtered.filter((i) => i.intake === filters.intake);
+
+        if (filters.country)
+            filtered = filtered.filter((i) => i.country === filters.country);
+
+        if (filters.date)
+            filtered = filtered.filter((i) => i.date === filters.date);
+
+        setData(filtered);
+    };
     return (
         <main className="dashboard-wrapper">
             <div className="container-fluid main-container">
-                {/* Header */}
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h4 className="mb-0">Hey, Good Morning Sagar!</h4>
-                    <div className="d-flex gap-2">
-                        <button className="btn btn-outline-primary btn-sm">
-                            Refresh Dashboard
-                        </button>
-                        <button className="btn btn-primary btn-sm">
-                            Register Student
-                        </button>
-                    </div>
-                </div>
-
-                <Filters />
-                <StatsRow />
-
+                {/* GRID */}
                 <div className="row g-4 align-items-start">
-                    {/* LEFT */}
+
+                    {/* LEFT COLUMN */}
                     <div className="col-xl-8 col-lg-8">
-                        <ApplicationsTable />
+                        {/* Greeting */}
+                        <h4 className="mb-4">Hey, Good Morning Sagar!</h4>
+
+                        {/* Filters */}
+                        <Filters onApply={applyFilters}/>
+
+                        {/* Stats */}
+                        <StatsRow />
+
+                        {/* Applications */}
+                        <ApplicationsTable searchTerm={searchTerm} data={data} />
+
+                        {/* Allied Services */}
                         <AlliedServicesCard />
                     </div>
-                    {/* RIGHT */}
+
+                    {/* RIGHT COLUMN */}
                     <div className="col-xl-4 col-lg-4">
+                        {/* ACTION BUTTONS */}
+                        <div className="right-actions mb-3">
+                            <button className="btn btn-outline-primary w-100">
+                                Refresh Dashboard
+                            </button>
+                            <button className="btn btn-primary w-100">
+                                Register Student
+                            </button>
+                        </div>
+
+                        {/* RIGHT STACK */}
                         <div className="right-sidebar">
                             <NewsWidget />
                             <EventsWidget />
                             <QuickLinks />
-                              <ContactRegionalManager />
+                            <ContactRegionalManager />
                         </div>
                     </div>
+
                 </div>
             </div>
-
         </main>
     );
 };
+
 
 export default Dashboard;

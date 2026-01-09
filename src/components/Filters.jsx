@@ -1,48 +1,68 @@
+import { useState } from "react";
 import { BsCalendar, BsGlobe } from "react-icons/bs";
 
-const Filters = () => {
+const Filters = ({ onApply }) => {
+  const [filters, setFilters] = useState({
+    year: "",
+    date: "",
+    intake: "",
+    country: "",
+  });
+
+  const handleChange = (key, value) => {
+    setFilters({ ...filters, [key]: value });
+  };
+
+  const applyFilters = () => {
+    onApply(filters);
+  };
+
   return (
-    <section className="filter-card mb-4">
-      <div className="row g-3 align-items-center">
-        <div className="col-md-3 col-sm-6">
-          <div className="filter-input">
-            <BsCalendar />
-            <select aria-label="Select Year">
-              <option>Year</option>
-            </select>
-          </div>
+    <section className="filter-card">
+      {/* ROW 1 */}
+      <div className="filter-row">
+        <div className="filter-input">
+          <BsCalendar />
+          <select onChange={(e) => handleChange("year", e.target.value)}>
+            <option value="">Year</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+          </select>
         </div>
 
-        <div className="col-md-3 col-sm-6">
-          <div className="filter-input">
-            <BsCalendar />
-            <select aria-label="Date Created">
-              <option>Date Created</option>
-            </select>
-          </div>
+        <div className="filter-input">
+          <BsCalendar />
+          <input
+            type="date"
+            onChange={(e) => handleChange("date", e.target.value)}
+          />
         </div>
 
-        <div className="col-md-3 col-sm-6">
-          <div className="filter-input">
-            <BsCalendar />
-            <select aria-label="Select Intake">
-              <option>Select intake</option>
-            </select>
-          </div>
+        <div className="filter-input">
+          <BsCalendar />
+          <select onChange={(e) => handleChange("intake", e.target.value)}>
+            <option value="">Select intake</option>
+            <option value="Fall">Fall</option>
+            <option value="Spring">Spring</option>
+          </select>
+        </div>
+      </div>
+
+      {/* ROW 2 */}
+      <div className="filter-row second">
+        <div className="filter-input">
+          <BsGlobe />
+          <select onChange={(e) => handleChange("country", e.target.value)}>
+            <option value="">Countries</option>
+            <option value="USA">USA</option>
+            <option value="UK">UK</option>
+            <option value="Canada">Canada</option>
+          </select>
         </div>
 
-        <div className="col-md-3 col-sm-6">
-          <div className="filter-input">
-            <BsGlobe />
-            <select aria-label="Countries">
-              <option>Countries</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="col-md-12 text-end">
-          <button className="btn apply-btn">Apply Filters</button>
-        </div>
+        <button className="btn apply-btn" onClick={applyFilters}>
+          Apply Filters
+        </button>
       </div>
     </section>
   );

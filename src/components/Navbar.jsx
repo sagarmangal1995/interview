@@ -1,6 +1,6 @@
 import { BsSearch, BsMegaphone, BsBell, BsChevronDown } from "react-icons/bs";
 
-const Navbar = () => {
+const Navbar = ({ searchTerm, setSearchTerm }) => {
   return (
     <nav className="top-navbar">
       <div className="container-fluid main-container">
@@ -11,11 +11,13 @@ const Navbar = () => {
             <input
               type="text"
               placeholder="Search by student name, ack no."
-              aria-label="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label="Search students"
             />
           </div>
 
-          {/* RIGHT ACTIONS */}
+          {/* RIGHT */}
           <div className="navbar-right">
             <div className="whats-new">
               <BsMegaphone className="nav-icon" />
@@ -28,10 +30,7 @@ const Navbar = () => {
             </div>
 
             <div className="profile">
-              <img
-                src="https://i.pravatar.cc/36?img=47"
-                alt="User profile"
-              />
+              <img src="https://i.pravatar.cc/36?img=47" alt="Profile" />
               <span className="profile-name">Sagar Mangal</span>
               <BsChevronDown className="nav-icon small" />
             </div>
